@@ -22,8 +22,3 @@
 
 
 ## 功能roadmap：
-
-
-**维护人员:**   
-于明龙（yuml@yunjiacloud.com）
-
