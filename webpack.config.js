@@ -1,20 +1,41 @@
-  const path = require('path');
+  const path = require('path')
   // 新引入
-  const webpack = require('webpack');
+  const webpack = require('webpack')
   const HtmlWebpackPlugin = require('html-webpack-plugin');
-  const ExtractTextPlugin = require("extract-text-webpack-plugin");
-  const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
-  const CopyWebpackPlugin = require('copy-webpack-plugin');
+  const ExtractTextPlugin = require("extract-text-webpack-plugin")
+  const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
+  const CopyWebpackPlugin = require('copy-webpack-plugin')
+  const CleanWebpackPlugin = require('clean-webpack-plugin')
+  const glob = require('glob')
 
 
-  module.exports = {
+//文件查找
+  const jsFiles = glob.sync('./src/views/*/*.js')
+  const entryList = {}
+  const pluginList = []
+  for (const jsFile of jsFiles) {
+    const entryName = jsFile.slice('./src/views/'.length, -'.js'.length)
+    const entryPath = './'+jsFile.slice('./src/'.length)
+    const htmlName = entryName+".html"
+    const templatePath = './'+jsFile.slice('./src/'.length, -'.js'.length)+".html"
+    console.log(entryName+":"+entryPath)
+    console.log(htmlName+":"+templatePath)
+    entryList[entryName] = entryPath
+    pluginList.push(new HtmlWebpackPlugin({
+     chunks: ['common',entryName],
+     filename: htmlName,
+     template: templatePath,
+   }))
+  }
+
+
+module.exports = {
     context: __dirname+"/src",
-    entry: {
-     // 'vendor': ["jquery","bootstrap"],
- //     'common': ['jquery'],
- 'demo/page1': './views/demo/page1.js',
- 'demo/page2': './views/demo/page2.js'
-},
+    entry: 
+    Object.assign({
+      //'vendor': ["jquery","bootstrap"],
+      //'common': ['jquery'],
+    }, entryList),
 output: {
   filename: 'js/[name].[hash].js',
   path: __dirname + '/dist'
@@ -64,19 +85,16 @@ module: {
     //     jQuery: "jquery",
     //     "window.jQuery": "jquery"
     // }),
+    new CleanWebpackPlugin('dist'),
     new CopyWebpackPlugin([
       { from: 'libs', to: 'libs/'},
       ]),
-    new HtmlWebpackPlugin({
-     chunks: ['common','demo/page1'],
-     filename: 'demo/page1.html',
-     template: './views/demo/page1.html',
-   }),
-    new HtmlWebpackPlugin({
-     chunks: ['demo/page2'],
-     filename: 'demo/page2.html',
-     template: './views/demo/page2.html',
-   }),
+   //  new HtmlWebpackPlugin({
+   //   chunks: ['common','demo/page1'],
+   //   filename: 'demo/page1.html',
+   //   template: './views/demo/page1.html',
+   // }),
+   ...pluginList,
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common'  // 指代index.js引入的lodash库
     }),
