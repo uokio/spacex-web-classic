@@ -12,27 +12,41 @@
     entry: {
      // 'vendor': ["jquery","bootstrap"],
  //     'common': ['jquery'],
-      'demo/page1': './views/demo/page1.js',
-      'demo/page2': './views/demo/page2.js'
-    },
-    output: {
-      filename: 'js/[name].[hash].js',
-      path: __dirname + '/dist'
-    },
+ 'demo/page1': './views/demo/page1.js',
+ 'demo/page2': './views/demo/page2.js'
+},
+output: {
+  filename: 'js/[name].[hash].js',
+  path: __dirname + '/dist'
+},
 
-    module: {
-      preLoaders: [
-          {test: /\.js$/, loader: "eslint-loader", exclude: /node_modules/}
-      ],
-      loaders: [
+module: {
+  rules: [
       // {test: /\.jpg$/, loader: "file-loader"},
       // {test: /\.png$/, loader: "url-loader?mimetype=image/png"},
-      {test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,loader: 'file-loader'},
-      {test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader","css-loader")},
-      {test: /\.scss$/, loader: ExtractTextPlugin.extract({
+      {test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,use: 'file-loader'},
+      {test: /\.css$/, use: ExtractTextPlugin.extract("style-loader","css-loader")},
+      {test: /\.scss$/, use: ExtractTextPlugin.extract({
         fallback: 'style-loader',
         use: ['css-loader', 'sass-loader']
       })},
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use:[
+        {loader: 'babel-loader',
+        options: {
+          presets: [['env', {modules: false}]],
+        }},
+        {loader: 'eslint-loader',
+        options: {
+          cache: true,
+          formatter: require('eslint-friendly-formatter')
+        }},
+        ]
+        
+      },
       ],
     },
     externals: { 
@@ -42,9 +56,9 @@
       alias: { 
        // jquery: path.resolve(__dirname, "src/libs/jquery/jquery-1.12.4.min.js" ),
        // bootstrap: path.resolve(__dirname, "src/libs/bootstrap/js/bootstrap.min.js" )
-      } 
-    },
-    plugins: [
+     } 
+   },
+   plugins: [
     // new webpack.ProvidePlugin({
     //     $: "jquery",
     //     jQuery: "jquery",
@@ -52,7 +66,7 @@
     // }),
     new CopyWebpackPlugin([
       { from: 'libs', to: 'libs/'},
-    ]),
+      ]),
     new HtmlWebpackPlugin({
      chunks: ['common','demo/page1'],
      filename: 'demo/page1.html',
