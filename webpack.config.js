@@ -81,7 +81,8 @@ module.exports = {
     alias: {
       // jquery: path.resolve(__dirname, "src/libs/jquery/jquery-1.12.4.min.js" ),
       // bootstrap: path.resolve(__dirname, "src/libs/bootstrap/js/bootstrap.min.js" )
-      apis: path.resolve(__dirname, 'src/apis/')
+      apis: path.resolve(__dirname, 'src/apis/'),
+      tools: path.resolve(__dirname, 'src/tools/')
     }
   },
   plugins: [

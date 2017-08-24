@@ -1,4 +1,4 @@
-const $ = require('jquery')
+import $ from 'jquery'
 
 const apps = {
   ouath2: {
@@ -11,7 +11,7 @@ const apps = {
 export default {
   request: function (api, params, success, error) {
     if (api.mock != null && api.mock.enable === true) {
-      console.log('mock data:' + api.path)
+      console.log('mock data: [app=' + api.app + ', path=' + api.path + ']')
       if (success != null) {
         success(api.mock.data)
       }
