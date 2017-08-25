@@ -38,7 +38,7 @@ $(function () {
   })
 
   $.fn.extend({
-    // localTpl(tplId, data, callback)
+    // tpl(tplId, data, callback)
     tpl: function (tplId, data, callback) {
       var $this = $(this)
       var template = window._tpl_compiled_local[tplId]
@@ -49,7 +49,7 @@ $(function () {
         callback($this, tplId, data, html)
       }
     },
-    // localApiTpl(tplId, apiCode, params, callback)
+    // apiTpl(tplId, apiCode, params, callback)
     apiTpl: function (tplId, api, params, callback) {
       var $this = $(this)
       apis.request(api, params, function (data) {
