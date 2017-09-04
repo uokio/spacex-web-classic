@@ -35,14 +35,23 @@ module.exports = {
   }, entryList),
   output: {
     filename: 'js/[name].[hash].js',
-    path: path.resolve('./dist')
+    path: path.resolve('./dist'),
+    publicPath: '/'
   },
 
   module: {
     rules: [
-      // {test: /\.jpg$/, loader: "file-loader"},
-      // {test: /\.png$/, loader: "url-loader?mimetype=image/png"},
-      {test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/, use: 'file-loader'},
+      {
+        test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: 'images/[hash].[ext]'
+            }
+          }
+        ]
+      },
       {test: /\.css$/, use: ExtractTextPlugin.extract('style-loader', 'css-loader')},
       {
         test: /\.scss$/,
@@ -70,7 +79,6 @@ module.exports = {
             }
           }
         ]
-
       }
     ]
   },
